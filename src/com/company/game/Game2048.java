@@ -26,9 +26,10 @@ public class Game2048 implements Game {
     @Override
     public void init() {
         board.fillBoard(asList(
-                2, 2, null, 2,
-                null, 2, null, 2,
-                4, 4, 2, null));
+                2, null, 2, 2,
+                2, null, null, 2,
+                2, 4, null, 4,
+                2, 2, null, 2));
     }
 
     @Override
