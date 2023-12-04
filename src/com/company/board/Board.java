@@ -1,21 +1,47 @@
 package com.company.board;
 
-import java.security.Key;
+import com.company.key.*;
+
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public abstract class Board {
 
-    private int weight;
-    private int height;
+    protected int width;
+    protected int height;
+    protected LinkedHashMap<Key, Integer> board = new LinkedHashMap<>();//HashMap<Key, Integer>();
 
-    Board(int weight, int height) {
-        this.weight = weight;
+
+    Board(int width, int height) {
+        this.width = width;
         this.height = height;
     }
 
-    private Map<Key, Integer> board = new HashMap<>();
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public void setBoard(LinkedHashMap<Key, Integer> board) {
+        this.board = board;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public LinkedHashMap<Key, Integer> getBoard() {
+        return board;
+    }
 
     public abstract void fillBoard(List<Integer> list);
 
@@ -30,6 +56,9 @@ public abstract class Board {
     public abstract List<Key> getColumn(int j);
 
     public abstract List<Key> getRow(int i);
+
+    public abstract List<Integer> getColumnValue(int j);
+    public abstract List<Integer> getRowsValue(int i);
 
     public abstract boolean hasValue(Integer value);
 
