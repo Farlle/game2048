@@ -38,26 +38,7 @@ public class SquareBoard extends Board {
             }
         }
         return availableKeys;
-//        ArrayList<Key> emptyList = new ArrayList<>();
-//        ArrayList<Key> listKey = new ArrayList<>();
-//
-//        listKey.addAll(board.keySet());
-//        for (Key key : listKey) {
-//            System.out.println(key.getI());
-//            if (board.get(key)==null) {
-//                System.out.println(key);
-//                emptyList.add(boa);
-//                System.out.println(emptyList);
-//            }
-//        }
 
-//        for (int i = 0; i < list.size(); i++) {
-//            System.out.println(list.get(i));
-//            if (list.get(i) == null) {
-//                emptyList.add(list.get(i));
-//            }
-//        }
-        // return emptyList;
     }
 
     @Override
@@ -129,22 +110,5 @@ public class SquareBoard extends Board {
         return getValues(getRow(i));
     }
 
-    @Override
-    public String toString() {
-        StringBuilder board = new StringBuilder();
 
-        for (int i = 0; i < getWidth(); i++) {
-            for (int j = 0; j < getHeight(); j++) {
-                if (getValue(getKey(i, j)) == null) {
-                    board.append("0 ");
-                } else {
-                    board.append(getValue(getKey(i, j)) + " ");
-                }
-            }
-
-            board.append("\n");
-        }
-
-        return board.toString();
-    }
 }

@@ -64,5 +64,23 @@ public abstract class Board {
 
     public abstract List<Integer> getValues(List<Key> keys);
 
+    @Override
+    public String toString() {
+        StringBuilder board = new StringBuilder();
+
+        for (int i = 0; i < getWidth(); i++) {
+            for (int j = 0; j < getHeight(); j++) {
+                if (getValue(getKey(i, j)) == null) {
+                    board.append("0 ");
+                } else {
+                    board.append(getValue(getKey(i, j)) + " ");
+                }
+            }
+
+            board.append("\n");
+        }
+
+        return board.toString();
+    }
 
 }
