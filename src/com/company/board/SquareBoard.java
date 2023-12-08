@@ -5,17 +5,20 @@ package com.company.board;
 import com.company.key.Key;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class SquareBoard extends Board {
+public class SquareBoard<T> extends Board<T, Key> {
+
+    public static final int BOARD_SIZE = 4;
 
     public SquareBoard(int size) {
         super(size, size);
     }
 
     @Override
-    public void fillBoard(List<Integer> list) {
+    public void fillBoard(List<T> list) {
         int index = 0;
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -42,7 +45,7 @@ public class SquareBoard extends Board {
     }
 
     @Override
-    public void addItem(Key key, Integer value) {
+    public void addItem(Key key, T value) {
         board.put(key, value);
     }
 
@@ -58,7 +61,7 @@ public class SquareBoard extends Board {
     }
 
     @Override
-    public Integer getValue(Key key) {
+    public T getValue(Key key) {
         return board.get(key);
     }
 
@@ -85,13 +88,13 @@ public class SquareBoard extends Board {
     }
 
     @Override
-    public boolean hasValue(Integer value) {
+    public boolean hasValue(T value) {
         return board.containsValue(value);
     }
 
     @Override
-    public List<Integer> getValues(List<Key> keys) {
-        List<Integer> values = new ArrayList<>();
+    public List<T> getValues(List<Key> keys) {
+        List<T> values = new ArrayList<>();
         for (var key : keys) {
             if (board.containsKey(key)) {
                 values.add(board.get(key));
@@ -101,14 +104,41 @@ public class SquareBoard extends Board {
     }
 
     @Override
-    public List<Integer> getColumnValue(int j) {
+    public void clear() {
+        List<T> clearList = new ArrayList<>(BOARD_SIZE*BOARD_SIZE);
+        Collections.fill(clearList, null);
+        fillBoard(clearList);
+    }
+
+    @Override
+    public List<T> getColumnValue(int j) {
         return getValues(getColumn(j));
     }
 
     @Override
-    public List<Integer> getRowsValue(int i) {
+    public List<T> getRowsValue(int i) {
         return getValues(getRow(i));
     }
 
 
+
+//
+    @Override
+    public String toString() {
+        StringBuilder board = new StringBuilder();
+
+        for (int i = 0; i < getWidth(); i++) {
+            for (int j = 0; j < getHeight(); j++) {
+                if (getValue(getKey(i, j)) == null) {
+                    board.append("0 ");
+                } else {
+                    board.append(getValue(getKey(i, j)) + " ");
+                }
+            }
+
+            board.append("\n");
+        }
+
+        return board.toString();
+    }
 }

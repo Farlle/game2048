@@ -1,52 +1,61 @@
 package com.company.game;
 
 import com.company.board.Board;
+import com.company.board.SquareBoard;
 import com.company.direction.Direction;
+import com.company.key.Key;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Handler;
 
-import static java.util.Arrays.asList;
 
 public class Game2048 implements Game {
-    GameHelper helper;// = new GameHelper();
-    Board board;
-    Random random;// = new Random();
+    public static final int GAME_SIZE = 4;
+    private final Board<Integer, Key> board = new SquareBoard<>(GAME_SIZE);
+
+    GameHelper helper = new GameHelper();
+    Random random = new Random();
+
 
     public Game2048(Board board) {
-        this.board = board;
+        init();
         helper = new GameHelper();
         random = new Random();
     }
 
+    public Game2048() {
+
+    }
+
     @Override
     public void init() {
-        board.fillBoard(asList(
-                2, null, 2, 2,
-                2, null, null, 2,
-                2, 4, null, 4,
-                2, 2, null, 2));
+        board.clear();
+        for (int i = 0; i < 2; i++) {
+            addItem();
+        }
     }
 
     @Override
     public boolean canMove() {
-        return !board.availableSpace().isEmpty();
+        return board.availableSpace().isEmpty() ? false : haveEqualNeighbours();
     }
 
     @Override
     public boolean move(Direction direction) {
+        int countMove = 0;
         switch (direction) {
             case BACK -> moveBack();
             case FORWARD -> moveForward();
             case LEFT -> moveLeft();
             case RIGHT -> moveRight();
+            default -> {
+                return false;
+            }
         }
-
-        return false;
+        addItem();
+        return true;
     }
 
 
@@ -54,7 +63,12 @@ public class Game2048 implements Game {
     public void addItem() {
         var freeBoard = board.availableSpace();
         var randomFreePointKey = freeBoard.get(random.nextInt(freeBoard.size() - 1));
-        board.addItem(randomFreePointKey, 2);
+        var randomInitValue = random.nextInt(10) + 1;
+        if (randomInitValue == 10) {
+            board.addItem(randomFreePointKey, 4);
+        } else {
+            board.addItem(randomFreePointKey, 2);
+        }
     }
 
     @Override
@@ -92,8 +106,8 @@ public class Game2048 implements Game {
         List<Integer> newBoard = new ArrayList<>();
 
         for (int i = 0; i < board.getWidth(); i++) {
-            List<Integer> mergedRows = helper.moveAndMergeEqual(board.getColumnValue(i));
-            newBoard.addAll(mergedRows);
+            List<Integer> mergedColumns = helper.moveAndMergeEqual(board.getColumnValue(i));
+            newBoard.addAll(mergedColumns);
         }
         newBoard = transposeBoard(newBoard);
         board.fillBoard(newBoard);
@@ -103,9 +117,9 @@ public class Game2048 implements Game {
         List<Integer> newBoard = new ArrayList<>();
 
         for (int i = 0; i < board.getWidth(); i++) {
-            List<Integer> mergedRows = helper.moveAndMergeEqual(board.getColumnValue(i));//4200
-            mergedRows = reverseNull(mergedRows);
-            newBoard.addAll(mergedRows);
+            List<Integer> mergedColumns = helper.moveAndMergeEqual(board.getColumnValue(i));
+            mergedColumns = reverseNull(mergedColumns);
+            newBoard.addAll(mergedColumns);
         }
         newBoard = transposeBoard(newBoard);
         board.fillBoard(newBoard);
@@ -131,7 +145,7 @@ public class Game2048 implements Game {
         return tmp;
     }
 
-    private List<Integer> transposeBoard(List<Integer> list){
+    private List<Integer> transposeBoard(List<Integer> list) {
         List<Integer> transposedList = new ArrayList<>();
         for (int i = 0; i < board.getHeight(); i++) {
             for (int j = 0; j < board.getWidth(); j++) {
@@ -140,4 +154,17 @@ public class Game2048 implements Game {
         }
         return transposedList;
     }
+
+    private boolean haveEqualNeighbours() {
+        for (int i = 0; i < board.getHeight() - 1; i++) {
+            for (int j = 0; j < board.getWidth() - 1; j++) {
+                if (board.getValue(new Key(i, j)) == board.getValue(new Key(i, j + 1)) ||
+                        board.getValue(new Key(i, j)) == board.getValue(new Key(i + 1, j))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }

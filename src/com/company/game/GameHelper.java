@@ -22,9 +22,7 @@ public class GameHelper {
             if (list.get(i) == list.get(i + 1)) {
                 list.set(i, list.get(i) * 2);
                 list.remove(i + 1);
-                //list.set(i + 1, null);
-                //moveToBeginning(list);
-            }
+                           }
         }
         return list;
     }
